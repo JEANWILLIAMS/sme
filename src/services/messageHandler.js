@@ -10,8 +10,10 @@ class MessageHandler {
         //P.3. HACEMOS QUE EL MENU SE PRESENTE (BOTONES) 
         await this.sendWelcomeMenu(message.from);
        //aqui COLOCAMOS EL MEDIA
-        } else if (incomingMessage == 'media'){
-          await this.sendMedia(message.from)
+        } //else if (incomingMessage == 'media'){
+          //await this.sendMedia(message.from)
+          else if (['audio','video','image','document'].includes(incomingMessage)){
+            await this.sendMedia(message.from, incomingMessage);          
         } else{
         const response = `Eco: ${message.text.body}`;
         await whatsappService.sendMessage(message.from, response, message.id);
@@ -83,8 +85,42 @@ class MessageHandler {
     await whatsappService.sendMessage(to, response);
   }
 
-  //LLAMAR MEDIA
-  async sendMedia(to){
+  //LLAMAR MEDIA      //agregamos el typeuser
+  async sendMedia(to, typeUser){
+    //estas lineas tmb agregamos para el nuevo
+    let type;
+    let mediaUrl;
+    let caption;
+
+    switch (typeUser.toLowerCase()) {
+      case 'audio':
+        type = 'audio';
+        mediaUrl = 'https://s3.amazonaws.com/gndx.dev/medpet-audio.aac';   
+        caption = 'Toma tu audio';         
+        break;
+
+      case 'video' :
+        type = 'video';
+        mediaUrl = 'https://s3.amazonaws.com/gndx.dev/medpet-video.mp4';   
+        caption = '¡Esto es una video!';  
+        break  
+
+      case 'image' :
+        type = 'image';
+        mediaUrl = 'https://s3.amazonaws.com/gndx.dev/medpet-imagen.png';   
+        caption = '¡Esto es una imagen!';  
+        break  
+
+      case 'document' :
+        type = 'document';
+        mediaUrl = 'https://s3.amazonaws.com/gndx.dev/medpet-file.pdf';   
+        caption = '¡Esto es una PDF!';  
+        break  
+    
+      default:
+        await sendMessage(to,'No reconozco el tipo de archivo solicitado' );
+        return;
+    }
     
 // const mediaUrl = 'https://s3.amazonaws.com/gndx.dev/medpet-audio.aac';   
 // const caption = 'Bienvenida';   

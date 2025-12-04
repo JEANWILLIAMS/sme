@@ -17,5 +17,14 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
-  }
+  },
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeanwilliams/sme.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jeanwilliams/sme/issues"
+  },
+  "homepage": "https://github.com/jeanwilliams/sme#readme"
 }
