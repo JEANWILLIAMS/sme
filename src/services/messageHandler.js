@@ -1,6 +1,14 @@
 import whatsappService from './whatsappService.js';
 
 class MessageHandler {
+//ARMAREMOS EL FLUJO, el manejo del estado del appintmen
+  constructor(){
+    this.appointmentState = {
+
+    };
+  }
+
+
   async handleIncomingMessage(message, senderInfo) {
     if (message?.type === 'text') {
       const incomingMessage = message.text.body.toLowerCase().trim();
@@ -71,7 +79,10 @@ class MessageHandler {
     let response; //ponemos un let para guardar la respuesta
     switch(option.normalize("NFD").replace(/[\u0300-\u036f]/g, "")){ //construiremos las opciones elegida y dentro se acondiciojnara por cada boton
       case 'ciclo verano':
-        response = 'Tenemos ciclo verano diferentes actividades';
+        //AQUI CONTINUAMOS CON EL FLOW, CUANDO LE DEN ciclo verano VAMOS ASIGANR ESTO PASE
+        this.appointmentState(to) = {step:'name'}
+        //---------------
+        response = 'Por favor ingresa tu nombre';
         break;
       case 'matrícula 2026':
         response = 'Los requisitos es gratis';
@@ -141,6 +152,41 @@ class MessageHandler {
 
     await whatsappService.sendMediaMessage(to, type, mediaUrl, caption);
   } //COMO SE LO VAMOS A ENVIAR
+
+  //HAREMOA NUESTRA LOGICA DE ALPOIMENT FLOW CON VARIAS PREGUTNAS RELACIONADAS DE LA CONSULTA
+  async handleAppointmentFlow(to, message){
+    //trabajar con el estado ya teneiendo la clase y constructor
+    const state = this.appointmentState(to);
+    let response;
+
+    switch (state.step) {
+      case 'name':
+        state.name = message;
+        state.step = 'petName';
+        response = "Gracias ahora, ¿Cuál es el nombre de tu mascota?"
+        break;
+    
+      case 'petName':
+        state.petName = message;
+        state.step = 'PetType';
+        response = '¿Qué tipo de mascota es?'  
+        break;
+
+      case 'petType':
+        state.petType = message;
+        state.step = 'reason';
+        response = '¿Cuál es el motivo de la consulta?'
+        break
+
+      case 'reason':
+        state.reason = meesage;
+        response = 'Gracias por agendar tu cita'
+ 
+    }
+          //cuando envia el mensaje del ingresa tu nombre
+      await whatsappService.sendMessage(to,response);
+
+  }
 }
 
 export default new MessageHandler();
